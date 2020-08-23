@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  nodejs:
+    image: node:alpine
+    container_name: nodejs
+    env_file: .env
+    restart: always
+    depends_on: 
+      - postgres
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - .:/var/app/www
+    working_dir: /var/app/www
+    command: yarn dev
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    restart: always
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
