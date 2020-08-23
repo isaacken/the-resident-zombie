@@ -1,9 +1,9 @@
 import express from 'express';
 
+import PersonController from './app/controllers/PersonController';
+
 const routes = express.Router();
 
-routes.get('/', (req, res) => {
-  return res.sendStatus(200);
-});
+routes.post('/people', PersonController.store);
 
 export default routes;
