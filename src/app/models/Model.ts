@@ -1,18 +1,24 @@
-import { Model as ObjectionModel } from 'objection';
 import db from '../../config/database';
+import Knex, { QueryBuilder } from 'knex';
 
-ObjectionModel.knex(db);
+class Model {
+  public query: Knex.QueryBuilder;
 
-class Model extends ObjectionModel {
-  public created_at: string | undefined;
-  public updated_at: string | undefined;
-
-  $beforeInsert() {
-    this.created_at = new Date().toISOString();
+  constructor (table: string) {
+    this.query = db(table);
   }
 
-  $beforeUpdate() {
-    this.updated_at = new Date().toISOString();
+  public async insert (data: any): Promise<any> {
+    data.created_at = new Date().toISOString();
+    const result = await this.query.returning('*').insert(data);
+
+    return result;
+  }
+
+  public async find(id: string): Promise<any> {
+    const result = await this.query.where('id', id).first();
+
+    return result;
   }
 }
 

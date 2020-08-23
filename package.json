@@ -17,9 +17,9 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "knex": "^0.21.5",
-    "objection": "^2.2.3",
     "pg": "^8.3.2",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.7",
@@ -28,6 +28,7 @@
     "@types/knex": "^0.16.1",
     "@types/supertest": "^2.0.10",
     "@types/uuid": "^8.3.0",
+    "@types/validator": "^13.1.0",
     "jest": "^26.4.2",
     "sqlite3": "^5.0.0",
     "supertest": "^4.0.2",
