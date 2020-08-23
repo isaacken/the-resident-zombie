@@ -1,7 +1,5 @@
 import validator from 'validator';
-import { validate as uuidValidate } from 'uuid';
 import ValidationException from '../../exceptions/ValidationException';
-import Person from '../../models/Person';
 
 class PersonValidator {
   private data: any;
