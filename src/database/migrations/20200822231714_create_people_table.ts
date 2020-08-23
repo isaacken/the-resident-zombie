@@ -1,5 +1,4 @@
 import * as Knex from "knex";
-import { v4 as uuid } from 'uuid';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('people', table => {
