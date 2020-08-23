@@ -20,18 +20,6 @@ describe('people', () => {
     });
 
     expect(response.status).toBe(201);
-    expect(uuidValidate(response.body.id)).toBeTruthy();
-    expect(response.body).toEqual({
-      id: response.body.id,
-      name: 'John Doe',
-      age: 21,
-      gender: 'M',
-      lat: -22.284850, 
-      lng: -46.365896,
-      infected: false,
-      created_at: response.body.created_at,
-      updated_at: response.body.updated_at
-    });
   });
 
   afterAll(async () => {
