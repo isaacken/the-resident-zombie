@@ -51,8 +51,8 @@ describe('people', () => {
 
     const response = await request(app).patch(`/people/location/${personId}`).send({
       location: {
-        lat: -22.284850, 
-        lng: -46.365896,
+        lat: -20.284850, 
+        lng: -23.365896,
       }
     });
 
