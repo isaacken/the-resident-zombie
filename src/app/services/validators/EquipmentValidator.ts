@@ -16,6 +16,11 @@ class EquipmentValidator {
       throw new ValidationException('inventory', 'cannot be empty');
     }
 
+    const itemsNames = this.data.map((e: any) => e.item_name);
+    if (itemsNames.some((e: any, k: number) => itemsNames.indexOf(e) !== k )) {
+      throw new ValidationException('item name', 'cannot be duplicate');
+    } 
+
     this.data.forEach(async (element: any) => {
       if (validator.isEmpty(element.item_name)) {
         throw new ValidationException('item name', 'cannot be empty');
@@ -60,7 +65,35 @@ class EquipmentValidator {
       throw new ValidationException('trader 2 id', 'is not registered');
     }
 
+    let itemsNames = this.data.trader_1.items.map((e: any) => e.item_name);
+    if (itemsNames.some((e: any, k: number) => itemsNames.indexOf(e) !== k )) {
+      throw new ValidationException('item name', 'cannot be duplicate');
+    }
+
     this.data.trader_1.items.forEach(async (element: any) => {
+      if (validator.isEmpty(element.item_name)) {
+        throw new ValidationException('item name', 'cannot be empty');
+      }
+  
+      if (!element.quantity) {
+        throw new ValidationException('quantity', 'cannot be empty');
+      }
+
+      if (typeof element.quantity !== 'number') {
+        throw new ValidationException('quantity', 'should be a number');
+      }
+
+      if (!(await db('equipments').where('item_name', element.item_name)).length) {
+        throw new ValidationException('item name', `${element.item_name} is not valid`);
+      }
+    });
+
+    itemsNames = this.data.trader_2.items.map((e: any) => e.item_name);
+    if (itemsNames.some((e: any, k: number) => itemsNames.indexOf(e) !== k )) {
+      throw new ValidationException('item name', 'cannot be duplicate');
+    }
+
+    this.data.trader_2.items.forEach(async (element: any) => {
       if (validator.isEmpty(element.item_name)) {
         throw new ValidationException('item name', 'cannot be empty');
       }
