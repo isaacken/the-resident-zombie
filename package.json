@@ -9,8 +9,7 @@
     "prestart": "yarn build",
     "start": "node ./dist/src/index.js",
     "pretest": "NODE_ENV=test knex migrate:latest && NODE_ENV=test knex seed:run",
-    "test": "NODE_ENV=test jest --no-cache",
-    "posttest": "rm __tests__/database.sqlite && touch __tests__/database.sqlite"
+    "test": "NODE_ENV=test jest --no-cache"
   },
   "dependencies": {
     "cors": "^2.8.5",
