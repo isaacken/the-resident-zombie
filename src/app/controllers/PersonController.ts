@@ -44,11 +44,34 @@ class PersonController {
       await trx('people_equipments').insert(inventoryData);
   
       trx.commit();
-    } catch (ex) {
+    } catch (exception) {
       return res.status(500).json({ message: 'internal server error' });
     }
 
     return res.status(201).json(person);
+  }
+
+  async updateLocation(req: Request, res: Response) {
+    const data = req.body;
+    const id = req.params.id;
+
+    try {
+      const personValidator = new PersonValidator(data.location);
+      await personValidator.validateUpdateLocation();
+    } catch (exception) {
+      return res.status(400).json(exception);
+    }
+    
+    try {
+      await db('people').where('id', id).update({
+        lat: data.location.lat,
+        lng: data.location.lng,
+      });
+    } catch (exception) {
+      return res.status(500).json(exception);
+    }
+
+    return res.sendStatus(204);
   }
 }
 
