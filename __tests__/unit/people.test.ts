@@ -1,7 +1,9 @@
 import request from 'supertest';
+import { v4 as uuid } from 'uuid';
 
 import db from '../../src/config/database';
 import app from '../../src/app';
+import Person from '../../src/app/entities/Person';
 
 describe('people', () => {
   it('should add survivor to database', async () => {
@@ -34,6 +36,28 @@ describe('people', () => {
       updated_at: null
     });
   });
+
+  it('should update survivor location', async () => {
+    let personId = uuid();
+    let person = new Person({
+      name: 'John Doe',
+      age: 21,
+      gender: 'M',
+      lat: -22.284850, 
+      lng: -46.365896,
+    }, personId);
+
+    await db('people').insert(person);
+
+    const response = await request(app).patch(`/people/location/${personId}`).send({
+      location: {
+        lat: -22.284850, 
+        lng: -46.365896,
+      }
+    });
+
+    expect(response.status).toBe(204);
+  });  
 
   afterAll(async () => {
     db.destroy();

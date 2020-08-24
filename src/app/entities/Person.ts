@@ -12,7 +12,7 @@ class Person {
   public created_at: string;
   public updated_at?: string;
 
-  constructor(props: Omit<Person, 'id'>, id?: string) {
+  constructor(props: Omit<Person, 'id'|'created_at'|'updated_at'>, id?: string) {
     Object.assign(this, props);
 
     if (!id) {
