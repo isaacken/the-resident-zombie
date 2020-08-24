@@ -32,6 +32,21 @@ class ReportController {
 
     return res.json(equipments);
   }
+
+  async pointsLostByInfectedSurvivors(req: Request, res: Response) {
+    const equipments = await db('equipments').select('item_name', 'id', 'points');
+    const infectedPeople = (await db('people').select('id').where('infected', true)).map(item => item.id);
+
+    let pointsTotal = 0;
+    for (let i in equipments) {
+      let quantity = (await db('people_equipments').sum('quantity').where('equipment_id', equipments[i].id).whereIn('person_id', infectedPeople))[0].sum;
+      pointsTotal += quantity * equipments[i].points;
+    }
+
+    return res.json({
+      points_lost_by_infected_survivors: pointsTotal
+    });
+  }
 }
 
 export default new ReportController();
