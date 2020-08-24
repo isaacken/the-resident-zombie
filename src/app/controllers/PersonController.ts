@@ -6,6 +6,7 @@ import EquipmentValidator from "../services/validators/EquipmentValidator";
 import db from "../../config/database";
 import Person from "../entities/Person";
 import Equipment from "../entities/Equipment";
+import InfectionReport from "../entities/InfectionReport";
 
 class PersonController {
   async store(req: Request, res: Response) {
@@ -55,6 +56,17 @@ class PersonController {
     const data = req.body;
     const id = req.params.id;
 
+    let person: Person|undefined;
+    try {
+      person = (await db('people').where('id', id))[0];
+    } catch (exception) {
+      return res.status(400).json({ message: 'id is not a valid uuid' });
+    }
+
+    if (!person) {
+      return res.status(404).json({ message: 'person not found' });
+    }
+
     try {
       const personValidator = new PersonValidator(data.location);
       await personValidator.validateUpdateLocation();
@@ -68,14 +80,56 @@ class PersonController {
         lng: data.location.lng,
       });
     } catch (exception) {
-      return res.status(500).json(exception);
+      return res.status(500).json({ message: 'internal server error' });
     }
 
     return res.sendStatus(204);
   }
 
   async updateInfected(req: Request, res: Response) {
+    const data = req.body;
+    const id = req.params.id;
     
+    let person: Person|undefined;
+    try {
+      person = (await db('people').where('id', id))[0];
+    } catch (exception) {
+      return res.status(400).json({ message: 'id is not a valid uuid' });
+    }
+
+    if (!person) {
+      return res.status(404).json({ message: 'person not found' });
+    }
+
+    try {
+      const personValidator = new PersonValidator(data);
+      await personValidator.validateUpdateInfected();
+    } catch (exception) {
+      return res.status(400).json(exception);
+    }
+
+    if ((await db('infection_reports').where('reported_id', id).where('reporter_id', data.reporter_id)).length > 0) {
+      return res.status(422).json({ message: 'already reported' });
+    }
+
+    try {
+      const infectionReport = new InfectionReport({
+        reporter_id: data.reporter_id,
+        reported_id: id
+      });
+
+      await db('infection_reports').insert(infectionReport);
+
+      if ((await db('infection_reports').where('reported_id', id)).length >= 5) {
+        await db('people').where('id', id).update({
+          infected: true
+        }); 
+      }
+    } catch (exception) {
+      return res.status(500).json(exception);
+    }
+    
+    return res.sendStatus(204);
   }
 }
 
