@@ -33,6 +33,6 @@ describe('update survivor location', () => {
   }); 
 
   afterAll(async () => {
-    db.destroy();
+    await db.destroy();
   });
 });

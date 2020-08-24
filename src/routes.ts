@@ -2,6 +2,7 @@ import express from 'express';
 
 import PersonController from './app/controllers/PersonController';
 import EquipmentController from './app/controllers/EquipmentController';
+import ReportController from './app/controllers/ReportController';
 
 const routes = express.Router();
 
@@ -10,5 +11,7 @@ routes.patch('/people/location/:id', PersonController.updateLocation);
 routes.patch('/people/flag-infected/:id', PersonController.updateInfected);
 
 routes.post('/trade', EquipmentController.trade);
+
+routes.get('/reports/infected-survivors', ReportController.infectedSurvivors);
 
 export default routes;

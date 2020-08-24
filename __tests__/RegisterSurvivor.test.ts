@@ -16,7 +16,7 @@ describe('register survivor', () => {
       inventory: [
         { "item_name": "Fiji Water", "quantity": 4 },
         { "item_name": "Campbell Soup", "quantity": 5 },
-        { "item_name": "Campbell Soup", "quantity": 5 },
+        { "item_name": "AK47", "quantity": 5 },
         { "item_name": "First Aid Pouch", "quantity": 2 },
       ]
     });
@@ -36,6 +36,6 @@ describe('register survivor', () => {
   });
 
   afterAll(async () => {
-    db.destroy();
+    await db.destroy();
   });
 });
