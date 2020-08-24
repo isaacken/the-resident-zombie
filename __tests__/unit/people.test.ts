@@ -56,6 +56,31 @@ describe('people', () => {
       }
     });
 
+    const [{ lat, lng }] = await db('people').select('lat', 'lng').where('id', personId);
+
+    expect(response.status).toBe(204);
+    expect(lat).toBe(-20.284850);
+    expect(lng).toBe(-23.365896);
+  });  
+
+  afterAll(async () => {
+    db.destroy();
+  });
+
+  it('should flag survivor as infected', async () => {
+    let personId = uuid();
+    let person = new Person({
+      name: 'John Doe',
+      age: 21,
+      gender: 'M',
+      lat: -22.284850, 
+      lng: -46.365896,
+    }, personId);
+
+    await db('people').insert(person);
+
+    const response = await request(app).patch(`/people/flag-infected/${personId}`).send();
+
     expect(response.status).toBe(204);
   });  
 
