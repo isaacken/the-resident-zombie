@@ -14,5 +14,6 @@ routes.post('/trade', EquipmentController.trade);
 
 routes.get('/reports/infected-survivors', ReportController.infectedSurvivors);
 routes.get('/reports/non-infected-survivors', ReportController.nonInfectedSurvivors);
+routes.get('/reports/items-per-survivor', ReportController.itemsPerSurvivor);
 
 export default routes;

@@ -19,6 +19,19 @@ class ReportController {
       non_infected_people: totalPeople? nonInfectedPeople / totalPeople : 0
     });
   }
+
+  async itemsPerSurvivor(req: Request, res: Response) {
+    const equipments = await db('equipments').select('item_name', 'id');
+    const totalPeople = (await db('people')).length;
+
+    for (let i in equipments) {
+      let quantity = (await db('people_equipments').sum('quantity').where('equipment_id', equipments[i].id))[0].sum;
+      equipments[i].quantity_per_survivor = quantity / totalPeople;
+      delete equipments[i].id;
+    }
+
+    return res.json(equipments);
+  }
 }
 
 export default new ReportController();
