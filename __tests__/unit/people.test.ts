@@ -79,11 +79,26 @@ describe('people', () => {
 
     await db('people').insert(person);
 
-    const response = await request(app).patch(`/people/flag-infected/${personId}`).send();
+    for (let i = 0; i < 5; i++) {
+      let reporterId = uuid();
+      let reporter = new Person({
+        name: 'John Doe',
+        age: 21,
+        gender: 'M',
+        lat: -22.284850, 
+        lng: -46.365896,
+      }, reporterId);
+
+      await db('people').insert(reporter);
+
+      const response = await request(app).patch(`/people/flag-infected/${personId}`).send({
+        reporter_id: reporterId
+      });
+
+      expect(response.status).toBe(204);
+    }
 
     const [{ infected }] = await db('people').select('infected').where('id', personId);
-
-    expect(response.status).toBe(204);
     expect(infected).toBe(true);
   }); 
 
