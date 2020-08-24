@@ -1,5 +1,7 @@
 import validator from 'validator';
 import ValidationException from '../../exceptions/ValidationException';
+import { validate as validateUuid } from 'uuid';
+import db from '../../../config/database';
 
 class PersonValidator {
   private data: any;
@@ -81,6 +83,20 @@ class PersonValidator {
 
     if (this.data.lng < -180 || this.data.lng > 180) {
       throw new ValidationException('longitude', 'should be between -180 and 180');
+    }
+  }
+
+  public async validateUpdateInfected() {
+    if (!this.data.reporter_id) {
+      throw new ValidationException('reporter id', 'cannot be empty');
+    }
+
+    if (!validateUuid(this.data.reporter_id)) {
+      throw new ValidationException('reporter id', 'is not a valid uuid');
+    }
+
+    if (!(await db('people').where('id', this.data.reporter_id)).length) {
+      throw new ValidationException('reporter id', 'is not registered');
     }
   }
 }

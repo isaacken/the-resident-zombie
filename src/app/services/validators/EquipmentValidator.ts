@@ -27,7 +27,7 @@ class EquipmentValidator {
         throw new ValidationException('quantity', 'should be a number');
       }
 
-      if (!await db('equipments').where('item_name', element.item_name).count()) {
+      if (!(await db('equipments').where('item_name', element.item_name)).length) {
         throw new ValidationException('item name', `${element.item_name} is not valid`);
       }
     });
