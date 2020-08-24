@@ -30,7 +30,7 @@ describe('people', () => {
       lat: -22.284850, 
       lng: -46.365896,
       infected: false,
-      created_at: null,
+      created_at: response.body.created_at,
       updated_at: null
     });
   });
