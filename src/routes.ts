@@ -13,5 +13,6 @@ routes.patch('/people/flag-infected/:id', PersonController.updateInfected);
 routes.post('/trade', EquipmentController.trade);
 
 routes.get('/reports/infected-survivors', ReportController.infectedSurvivors);
+routes.get('/reports/non-infected-survivors', ReportController.nonInfectedSurvivors);
 
 export default routes;
