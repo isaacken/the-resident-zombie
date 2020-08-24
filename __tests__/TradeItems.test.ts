@@ -1,11 +1,11 @@
 import request from 'supertest';
 import { v4 as uuid } from 'uuid';
 
-import db from '../../src/config/database';
-import app from '../../src/app';
-import Person from '../../src/app/entities/Person';
+import db from '../src/config/database';
+import app from '../src/app';
+import Person from '../src/app/entities/Person';
 
-describe('equipments', () => {
+describe('trade items', () => {
   it('should trade items between two people', async () => {
     const equipments = await db('equipments').select('*');
 
