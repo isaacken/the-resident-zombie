@@ -9,25 +9,13 @@ export default {
   client: process.env.DB_CLIENT,
   useNullAsDefault: true,
   
-  connection: () => {
-    if (process.env.DB_CLIENT === 'sqlite3') {
-      return {
-        filename: process.env.DB_FILE,
-        
-      }
-    } else {
-      return {
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME,
-        host: process.env.DB_HOST,
-        port: Number(process.env.DB_PORT),
-        ssl: false
-      }
-    }
-  },
-  seeds: {
-    directory: './src/database/seeds'
+  connection: {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    ssl: false
   },
   pool: {
     min: 2,
@@ -37,6 +25,9 @@ export default {
     tableName: 'knex_migrations',
     directory: [path.resolve(__dirname, 'src', 'database', 'migrations')],
     extension: 'ts'
+  },
+  seeds: {
+    directory: [path.resolve(__dirname, 'src', 'database', 'seeds')]
   },
   log: {
     warn() { },
