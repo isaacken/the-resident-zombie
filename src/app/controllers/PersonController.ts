@@ -34,7 +34,7 @@ class PersonController {
       person = (await trx('people').returning('*').insert(personData))[0];
 
       for (let i in inventoryData) {
-        let equipment: Equipment = await db('equipments').where('item_name', 'Fiji Water').first();
+        let equipment: Equipment = await db('equipments').where('item_name', inventoryData[i].item_name).first();
 
         inventoryData[i].id = uuid();
         inventoryData[i].person_id = person.id;
