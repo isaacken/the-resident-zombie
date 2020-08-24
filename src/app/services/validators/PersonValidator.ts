@@ -22,11 +22,11 @@ class PersonValidator {
     }
 
     if (!this.data.lat) {
-      throw new ValidationException('lat', 'cannot be empty');
+      throw new ValidationException('latitude', 'cannot be empty');
     }
 
     if (!this.data.lng) {
-      throw new ValidationException('lng', 'cannot be empty');
+      throw new ValidationException('longitude', 'cannot be empty');
     }
 
     if (this.data.name.length > 255) {
@@ -42,7 +42,37 @@ class PersonValidator {
     }
 
     if (typeof this.data.lat !== 'number') {
-      throw new ValidationException('lat', 'should be a number');
+      throw new ValidationException('latitude', 'should be a number');
+    }
+
+    if (typeof this.data.lng !== 'number') {
+      throw new ValidationException('longitude', 'should be a number');
+    }
+
+    if (this.data.lat < -90 || this.data.lat > 90) {
+      throw new ValidationException('latitude', 'should be between -90 and 90');
+    }
+
+    if (this.data.lng < -180 || this.data.lng > 180) {
+      throw new ValidationException('longitude', 'should be between -180 and 180');
+    }
+  }
+
+  public async validateUpdateLocation() {
+    if (!this.data.lat) {
+      throw new ValidationException('latitude', 'cannot be empty');
+    }
+
+    if (!this.data.lng) {
+      throw new ValidationException('longitude', 'cannot be empty');
+    }
+
+    if (typeof this.data.lat !== 'number') {
+      throw new ValidationException('latitude', 'should be a number');
+    }
+
+    if (typeof this.data.lng !== 'number') {
+      throw new ValidationException('longitude', 'should be a number');
     }
 
     if (this.data.lat < -90 || this.data.lat > 90) {
