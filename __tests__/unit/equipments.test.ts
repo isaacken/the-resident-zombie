@@ -21,10 +21,10 @@ describe('equipments', () => {
     await db('people').insert(trader1);
 
     await db('people_equipments').insert([
-      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.name === 'Fiji Water').id, quantity: 10 },
-      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.name === 'Campbell Soup').id, quantity: 10 },
-      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.name === 'First Aid Pouch').id, quantity: 10 },
-      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.name === 'AK47').id, quantity: 10 },
+      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.item_name === 'Fiji Water').id, quantity: 10 },
+      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.item_name === 'Campbell Soup').id, quantity: 10 },
+      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.item_name === 'First Aid Pouch').id, quantity: 10 },
+      { id: uuid(), person_id: trader1Id, equipment_id: equipments.find((e) => e.item_name === 'AK47').id, quantity: 10 },
     ]);
     
     let trader2Id = uuid();
@@ -36,14 +36,13 @@ describe('equipments', () => {
       lng: -46.365896,
     }, trader2Id);
 
-    await db('people_equipments').insert([
-      { id: uuid(), person_id: trader2Id, equipment_id: equipments.find((e) => e.name === 'Fiji Water').id, quantity: 10 },
-      { id: uuid(), person_id: trader2Id, equipment_id: equipments.find((e) => e.name === 'Campbell Soup').id, quantity: 10 },
-      { id: uuid(), person_id: trader2Id, equipment_id: equipments.find((e) => e.name === 'First Aid Pouch').id, quantity: 10 },
-      { id: uuid(), person_id: trader2Id, equipment_id: equipments.find((e) => e.name === 'AK47').id, quantity: 10 },
-    ]);
-
     await db('people').insert(trader2);
+
+    await db('people_equipments').insert([
+      { id: uuid(), person_id: trader2Id, equipment_id: equipments.find((e) => e.item_name === 'Fiji Water').id, quantity: 10 },
+      { id: uuid(), person_id: trader2Id, equipment_id: equipments.find((e) => e.item_name === 'Campbell Soup').id, quantity: 10 },
+      { id: uuid(), person_id: trader2Id, equipment_id: equipments.find((e) => e.item_name === 'First Aid Pouch').id, quantity: 10 },
+    ]);
 
     const response = await request(app).post('/trade').send({
       trader_1: {
@@ -62,10 +61,57 @@ describe('equipments', () => {
       }
     });
 
-    expect(response.status).toBe(201);
+    await db.destroy();
+    await db.initialize();
+
+    const firstAid_t1 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader1Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'First Aid Pouch').id)
+        .first());
+    const ak47_t1 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader1Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'AK47').id)
+        .first());
+    const fijiWater_t1 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader1Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'Fiji Water').id)
+        .first());
+    const campbellSoup_t1 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader1Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'Campbell Soup').id)
+        .first());
+
+    const firstAid_t2 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader2Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'First Aid Pouch').id)
+        .first());
+    const ak47_t2 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader2Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'AK47').id)
+        .first());
+    const fijiWater_t2 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader2Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'Fiji Water').id)
+        .first());
+    const campbellSoup_t2 = (await db('people_equipments').select('quantity')
+        .where('person_id', trader2Id)
+        .where('equipment_id', equipments.find((e) => e.item_name === 'Campbell Soup').id)
+        .first());
+
+    expect(response.status).toBe(200);
+
+    expect(firstAid_t2.quantity).toBe(11);
+    expect(fijiWater_t2.quantity).toBe(9);
+    expect(ak47_t2.quantity).toBe(2);
+    expect(campbellSoup_t2.quantity).toBe(9);
+
+    expect(firstAid_t1.quantity).toBe(9);
+    expect(ak47_t1.quantity).toBe(8);
+    expect(fijiWater_t1.quantity).toBe(11);
+    expect(campbellSoup_t1.quantity).toBe(11);
   });
 
   afterAll(async () => {
-    db.destroy();
+    await db.destroy();
   });
 });
