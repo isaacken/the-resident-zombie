@@ -6,8 +6,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string('name').notNullable();
     table.integer('age').notNullable();
     table.enum('gender', ['M', 'F']).notNullable();
-    table.float('lat').notNullable();
-    table.float('lng').notNullable();
+    table.double('lat').notNullable();
+    table.double('lng').notNullable();
     table.boolean('infected').defaultTo(false).notNullable();
 
     table.timestamps();
