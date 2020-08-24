@@ -73,6 +73,10 @@ class PersonController {
 
     return res.sendStatus(204);
   }
+
+  async updateInfected(req: Request, res: Response) {
+    
+  }
 }
 
 export default new PersonController();

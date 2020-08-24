@@ -81,8 +81,11 @@ describe('people', () => {
 
     const response = await request(app).patch(`/people/flag-infected/${personId}`).send();
 
+    const [{ infected }] = await db('people').select('infected').where('id', personId);
+
     expect(response.status).toBe(204);
-  });  
+    expect(infected).toBe(true);
+  }); 
 
   afterAll(async () => {
     db.destroy();
